@@ -1,5 +1,5 @@
 import {Routes, Route} from 'react-router-dom';
-import {Suspense} from 'react';
+import {Suspense, useEffect} from 'react';
 import './App.css';
 import Error from './components/Error';
 import Login from './components/Forms/Login';
@@ -9,6 +9,7 @@ import Dashboard from './components/Dashboard/Dashboard';
 import AddStore from './components/Forms/AddStore';
 import AddProduct from './components/Forms/AddProduct';
 import Loading from './components/Loading';
+import UserProfile from './components/UserProfile/UserProfile';
 
 function App() {
   return (
@@ -18,7 +19,8 @@ function App() {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/addStore" element={<AddStore />} />
+        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/AddStore" element={<AddStore />} />
         <Route path="/AddProduct" element={<AddProduct />} />
         <Route path="*" element={<Error />} />
       </Routes>

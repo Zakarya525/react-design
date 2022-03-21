@@ -1,24 +1,23 @@
 import {CardContent, Typography} from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {Link} from 'react-router-dom';
-const AddNew = ({text, path}) => {
+const AddNew = ({path, text, token}) => {
   return (
     <CardContent
       sx={{
-        pt: 4,
-        border: '1px solid #ccc',
-        height: '200px',
+        height: '170px',
         borderRadius: '10px',
         textAlign: 'center',
       }}>
-      <Link to={path}>
+      <Link to={path} state={{value: text, accessToken: token}}>
         <AddCircleOutlineIcon sx={{fontSize: 50}} />
         <Typography
           textAlign="center"
           gutterBottom
           variant="h6"
           component="div">
-          {text}
+          <span className="text-dark text-italic"> Click&nbsp;Here</span>{' '}
+          <br></br> To add new {text}
         </Typography>
       </Link>
     </CardContent>

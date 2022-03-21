@@ -17,7 +17,7 @@ import {
 const pages = ['Store', 'Products', 'Home'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
-const Navbar = () => {
+const Navbar = ({image, username, avatar_url, email}) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -35,7 +35,8 @@ const Navbar = () => {
     let value = e.target.innerHTML;
     if (value === 'Home') {
       navigate('/');
-    } else navigate('/dashboard', {state: {value}});
+    } else
+      navigate('/dashboard', {state: {value, name: username, email: email}});
   };
 
   const handleCloseUserMenu = () => {
@@ -94,7 +95,7 @@ const Navbar = () => {
           <Box sx={{flexGrow: 0}}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{p: 0}}>
-                <Avatar alt="Muhammad Zakarya" src={Image} />
+                <Avatar alt="Muhammad Zakarya" src={image ? Image : ''} />
               </IconButton>
             </Tooltip>
             <Menu

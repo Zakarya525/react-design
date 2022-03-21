@@ -1,15 +1,17 @@
 import axios from 'axios';
 import React, {Fragment, useState} from 'react';
-import {Link} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {Button, Stack, TextField, CssBaseline, Grow, Box} from '@mui/material';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import {Button, Stack, TextField, Grow, Container} from '@mui/material';
 
 const AddProduct = () => {
-  const [product, setProduct] = useState('');
+  const location = useLocation();
+  const {value} = location.state;
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-
   const [selectedFile, setSelectedFile] = useState();
-  const [isFilePicked, setIsFilePicked] = useState(false);
+  const [isFilePicked, setIsSelected] = useState(false);
 
   const changeHandler = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -20,42 +22,31 @@ const AddProduct = () => {
     e.preventDefault();
     axios.post(
       'https://5764-37-111-134-98.ngrok.io/AddProduct',
-      {product: product, description: description},
+      {name: name, description: description},
       (Headers = {headerkey: 'application/json'}),
     );
-    setProduct('');
+    setName('');
     setDescription('');
   };
 
   return (
     <Grow in={open}>
-      <form onSubmit={handleSubmit}>
-        <Link to="/dashboard">
-          <ArrowBackIcon
-            sx={{
-              color: '#1E90FF',
-              float: 'left',
-              ':hover': {
-                color: '#1976d2',
-              },
-            }}></ArrowBackIcon>
-        </Link>
+      <Container maxwidth="sm" onSubmit={handleSubmit}>
         <TextField
           fullWidth
           id="fullWidth"
-          label="Product Name"
+          label={value.text}
           variant="outlined"
-          value={product}
+          value={name}
           margin="normal"
-          onChange={(e) => setProduct(e.target.value)}
+          onChange={(e) => setName(e.target.value)}
         />
         <TextField
           fullWidth
           id="fullWidth"
           type="description"
           variant="outlined"
-          id="outlined-multiline-static"
-          label="Description"
+          label="Description (More than 20 characters)"
           multiline
           rows={4}
           value={description}
@@ -69,18 +60,19 @@ const AddProduct = () => {
             component="label"
             margin="normal"
             sx={{m: '1rem'}}>
+            <CameraAltIcon sx={{fontSize: '20px', mr: 1}}></CameraAltIcon>
             <input type="file" name="file" onChange={changeHandler} hidden />
-            Image
+            Select Image
           </Button>
 
           <Button
-            disabled={description.length < 20 || product.length < 1}
+            disabled={description.length < 20 || name.length < 1}
             variant="contained"
             sx={{m: '1rem'}}>
-            Add Product
+            Add {value.text}
           </Button>
         </Stack>
-      </form>
+      </Container>
     </Grow>
   );
 };

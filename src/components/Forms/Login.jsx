@@ -1,35 +1,58 @@
-import axios from 'axios';
-import React, {Fragment, useState} from 'react';
-import {Link} from 'react-router-dom';
+import React, {Fragment, useState, useEffect} from 'react';
+import {useForm} from 'react-hook-form';
+import {Link, useNavigate} from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {Button, Stack, TextField, CssBaseline, Box} from '@mui/material';
-import {Grow} from '@material-ui/core';
+import {
+  Button,
+  Stack,
+  TextField,
+  CssBaseline,
+  Box,
+  Typography,
+} from '@mui/material';
+import {Grow, Fade} from '@material-ui/core';
 
 export const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  let navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: {errors},
+  } = useForm({
+    defaultValues: {
+      username: '',
+      password: '',
+    },
+  });
+  const [accessToken, setAccessToken] = useState('');
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const respone = axios.post(
-      'https://mobile-accessories.herokuapp.com/login',
-      {username: username, password: password},
-      (Headers = {headerkey: 'application/json'}),
-    );
+  const fetchUser = async (data) => {
+    const res = await fetch(`https://mph-backend.herokuapp.com/login`, {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify(
+        `grant_type=&username=${data.username}&password=${data.password}&scope=&client_id=&client_secret=`,
+      ),
+    });
 
-    console.log(respone);
-    setUsername('');
-    setPassword('');
+    const result = await res.json();
+
+    if (accessToken) {
+      navigate('/dashboard', {state: {token: accessToken, user: result}});
+    }
   };
 
   return (
     <Fragment>
-      <Grow in={open}>
-        <div className="container" id="body-content" maxWidth="lg">
+      <Grow in={true}>
+        <div className="container" id="body-content" maxwidth="lg">
           <CssBaseline />
 
           <Box sx={{display: 'flex', p: 1}}>
-            <form className="form" onSubmit={handleSubmit}>
+            <form className="form" onSubmit={handleSubmit(fetchUser)}>
+              <CssBaseline />
               <Link to="/">
                 <ArrowBackIcon
                   sx={{
@@ -45,37 +68,53 @@ export const Login = () => {
                 id="fullWidth"
                 label="Username"
                 variant="outlined"
-                value={username}
                 margin="normal"
-                onChange={(e) => setUsername(e.target.value)}
+                {...register('username', {required: 'Please fill the field.'})}
               />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'red',
+                  float: 'left',
+                }}>
+                {errors.username?.message}
+              </Typography>
               <TextField
                 fullWidth
                 id="fullWidth"
                 type="password"
                 label="Password"
                 variant="outlined"
-                value={password}
                 margin="normal"
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Password"
+                {...register('password', {
+                  required: 'Please fill the field.',
+                  minLength: {
+                    value: 8,
+                    message: 'Min length is 8',
+                  },
+                })}
               />
+              <Typography
+                variant="body6"
+                sx={{
+                  color: 'red',
+                  float: 'left',
+                }}>
+                {errors.password?.message}
+              </Typography>
 
-              <Stack direction="row">
+              <Box>
                 <Link to="/SignUp">
                   <Button margin="normal" sx={{m: '1rem'}}>
                     Register
                   </Button>
                 </Link>
 
-                <Button
-                  disabled={username.length < 1 || password.length < 5}
-                  variant="contained"
-                  onClick={handleSubmit}
-                  sx={{m: '1rem'}}>
+                <Button type="submit" variant="contained" sx={{m: '1rem'}}>
+                  <input type="submit" hidden />
                   Sign In
                 </Button>
-              </Stack>
+              </Box>
             </form>
             <div className="img-info"></div>
           </Box>
@@ -84,5 +123,4 @@ export const Login = () => {
     </Fragment>
   );
 };
-
 export default Login;

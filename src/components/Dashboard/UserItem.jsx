@@ -7,11 +7,9 @@ import {
   Typography,
 } from '@mui/material';
 
-export const UserItem = (props) => {
-  const {login, avatar_url, about} = props;
-
+export const UserItem = ({username, email, avatar_url}) => {
   return (
-    <Card sx={{maxWidth: 345}}>
+    <Card sx={{maxwidth: 345}}>
       <CardMedia
         sx={{
           width: '200px',
@@ -21,9 +19,9 @@ export const UserItem = (props) => {
         }}
         component="img"
         height="200"
-        borderRadius="50%"
+        borderradius="50%"
         image={avatar_url}
-        alt={login}
+        alt={username}
       />
       <CardContent>
         <Typography
@@ -31,10 +29,10 @@ export const UserItem = (props) => {
           gutterBottom
           variant="h5"
           component="div">
-          {login}
+          {username}
         </Typography>
         <Typography textAlign="center" variant="body2" color="text.secondary">
-          {about}
+          {email}
         </Typography>
       </CardContent>
       <CardActions>

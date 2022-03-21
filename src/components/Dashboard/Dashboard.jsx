@@ -1,55 +1,65 @@
 import UserItem from './UserItem';
-import Image from '../images/zakaryakhan525.jpg';
 import Navbar from '../Navbar';
-import {Fragment, useEffect} from 'react';
+import {Fragment, useEffect, useState} from 'react';
 import {Grid} from '@mui/material';
 import {Box} from '@mui/system';
 import AddNew from './AddNew';
 import {useLocation} from 'react-router-dom';
+import Image from '../images/admin.jpg';
 
 const Dashboard = () => {
-  useEffect(() => {
-    document.body.style.background = '#f4f4f4';
-  });
-
   let {state} = useLocation();
-  if (state == null) {
-    state = {value: 'Store'};
-    console.log(state.value);
-  }
+  console.log(state);
+
+  useEffect(() => {
+    const getData = async () => {
+      const userFromBackend = await getUser();
+    };
+
+    getData();
+
+    document.body.style.background = '#f4f4f4';
+  }, []);
+
+  const getUser = async () => {
+    const res = await fetch(`https://mph-backend.herokuapp.com/users/me`, {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        Authorization: `Bearer ${state.token}`,
+      },
+    });
+
+    const user = await res.json();
+    return user;
+  };
+
+  const {username, email} = state.user;
 
   return (
     <Fragment>
-      <Navbar />
+      <Navbar
+        image="1"
+        username="assalam"
+        email="assalam@gmail"
+        avatar_url={Image}
+      />
 
-      <Box
-        sx={{
-          p: 2,
-          display: 'grid',
-          gridTemplateColumns: '2fr 5fr',
-          gridGap: '4rem',
-        }}>
+      <section className="dashboard-container">
         <Grid item>
-          <UserItem
-            id="1"
-            login="zakaryakhan525"
-            avatar_url={Image}
-            about="Hi, I am React Developer."
-          />
+          <UserItem username={username} email={email} avatar_url={Image} />
         </Grid>
 
-        {state.value == 'Products' ? (
-          <div container className="grid1">
-            <AddNew text="Add New Product" path="/AddProduct" />
+        {state == 'Products' ? (
+          <div className="grid1">
+            <AddNew text="Product" path="/AddProduct" />
           </div>
-        ) : state.value == 'Store' ? (
-          <Grid container>
-            <AddNew text="Add Your New Store" path="/AddStore" />
-          </Grid>
         ) : (
-          <h1>This is the Big Error</h1>
+          <div className="grid1">
+            <AddNew text="Store" token={state.token} path="/AddStore" />
+          </div>
         )}
-      </Box>
+      </section>
     </Fragment>
   );
 };

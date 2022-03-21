@@ -1,46 +1,47 @@
 import axios from 'axios';
 import React, {Fragment, useState} from 'react';
+import {useForm} from 'react-hook-form';
+import FileBase64 from 'react-file-base64';
 import {useNavigate, Link} from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 import {
   Button,
   Stack,
   TextField,
-  Container,
   CssBaseline,
   Box,
-  Fade,
-  Alert,
-  AlertTitle,
+  Typography,
 } from '@mui/material';
 import '../../App.css';
 import {Grow} from '@material-ui/core';
 
 export const SignUp = () => {
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [notify, setNotify] = useState({
-    isOpen: false,
-    message: '',
-    type: '',
-  });
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: {errors},
+  } = useForm();
+  let navigate = useNavigate();
 
-  const submitHandler = (e) => {
-    e.preventDefault();
+  const submitHandler = (data) => {
+    console.log(data);
+    fetch('https://mph-backend.herokuapp.com/register', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      }),
+    }).then((result) => console.log(result));
+    reset();
 
-    const resp = axios.post(
-      'https://mobile-accessories.herokuapp.com/register',
-      {username: username, email: email, password: password},
-      (Headers = {headerkey: 'application/json'}),
-    );
-
-    console.log(resp);
-
-    setPassword('');
-    setUsername('');
-    setEmail('');
+    navigate('/login');
   };
 
   return (
@@ -49,7 +50,7 @@ export const SignUp = () => {
         <div id="body-content" className="container">
           <CssBaseline />
           <Box sx={{display: 'flex', p: 1}}>
-            <form className="form" onSubmit={submitHandler}>
+            <form className="form" onSubmit={handleSubmit(submitHandler)}>
               <Link to="/">
                 <ArrowBackIcon
                   sx={{
@@ -63,22 +64,38 @@ export const SignUp = () => {
               <TextField
                 fullWidth
                 aria-required={'true'}
+                type="name"
                 id="fullWidth"
                 label="Username"
                 variant="outlined"
                 margin="normal"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                {...register('username', {required: 'Please fill the field.'})}
               />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'red',
+                  float: 'left',
+                }}>
+                {errors.username?.message}
+              </Typography>
 
               <TextField
                 fullWidth
                 id="fullWidth"
+                type="email"
                 label="Email"
                 margin="normal"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                {...register('email', {required: 'Please fill the field.'})}
               />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'red',
+                  float: 'left',
+                }}>
+                {errors.email?.message}
+              </Typography>
 
               <TextField
                 fullWidth
@@ -87,28 +104,28 @@ export const SignUp = () => {
                 type="password"
                 autoComplete="current-password"
                 margin="normal"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                {...register('password', {
+                  required: 'Please fill the field.',
+                  minLength: {
+                    value: 8,
+                    message: 'Min length is 8',
+                  },
+                })}
               />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'red',
+                  float: 'left',
+                  mb: 5,
+                }}>
+                {errors.password?.message}
+              </Typography>
 
-              <Stack direction="row">
-                <Link to="/login">
-                  <Button margin="normal" sx={{m: '1rem'}}>
-                    Sign In
-                  </Button>
-                </Link>
-                <Button
-                  disabled={
-                    username.length < 1 ||
-                    password.length < 5 ||
-                    email.length < 1
-                  }
-                  variant="contained"
-                  onClick={submitHandler}
-                  sx={{m: '1rem'}}>
-                  Register
-                </Button>
-              </Stack>
+              <Button type="submit" variant="contained" sx={{m: '3rem'}}>
+                <input type="submit" hidden />
+                Register
+              </Button>
             </form>
             <div className="img-info"></div>
           </Box>
