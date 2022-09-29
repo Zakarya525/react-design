@@ -1,4 +1,4 @@
-# Mardan-Paira-House
+# React + Vite App
 **About**
 > E-commerce App build with React.js + Vite. User Authentication, Creating store and adding products to it, are the main features.
 
