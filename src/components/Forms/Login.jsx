@@ -2,7 +2,7 @@ import React, {Fragment, useEffect, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Link, useNavigate} from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {Box, Button, CssBaseline, TextField, Typography,} from '@mui/material';
+import {Box, Button, CssBaseline, TextField, Typography} from '@mui/material';
 import {Grow} from '@material-ui/core';
 
 export const Login = () => {
@@ -19,19 +19,8 @@ export const Login = () => {
   });
   const [accessToken, setAccessToken] = useState('');
 
-  const fetchUser = async (data) => {
-    const res = await fetch(`https://mph-backend.herokuapp.com/login`, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/x-www-form-urlencoded',
-      },
-      body: JSON.stringify(
-        `grant_type=&username=${data.username}&password=${data.password}&scope=&client_id=&client_secret=`,
-      ),
-    });
-
-    const result = await res.json();
-    navigate('/dashboard', {state: {token: result.access_token}});
+  const handleClick = async () => {
+    navigate('/sidebar');
   };
 
   return (
@@ -41,7 +30,7 @@ export const Login = () => {
           <CssBaseline />
 
           <Box sx={{display: 'flex', p: 1}}>
-            <form className="form" onSubmit={handleSubmit(fetchUser)}>
+            <form className="form" onSubmit={handleSubmit(handleClick)}>
               <CssBaseline />
               <Link to="/">
                 <ArrowBackIcon
@@ -93,15 +82,14 @@ export const Login = () => {
                 {errors.password?.message}
               </Typography>
 
-              <Box>
-                <Link to="/SignUp">
-                  <Button margin="normal" sx={{m: '1rem'}}>
-                    Register
+              <Box sx={{display: 'flex'}}>
+                <Link to="/">
+                  <Button size="small" sx={{m: '1rem'}}>
+                    Don't have an Account
                   </Button>
                 </Link>
 
-                <Button type="submit" variant="contained" sx={{m: '1rem'}}>
-                  <input type="submit" hidden />
+                <Button size="small" type="submit" variant="contained">
                   Sign In
                 </Button>
               </Box>

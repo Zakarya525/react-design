@@ -1,62 +1,115 @@
-import UserItem from '../../components/UserItem';
-import Navbar from '../../components/Navbar';
-import {Fragment, useEffect, useState} from 'react';
-import {Grid} from '@mui/material';
-import AddNew from '../../components/AddNew';
-import {useLocation} from 'react-router-dom';
-import Image from '../../components/images/admin.jpg';
+import React from 'react';
+import {Grid, Typography} from '@material-ui/core';
+import {
+  LineChart,
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Line,
+  Bar,
+} from 'recharts';
 
 const Dashboard = () => {
-    let {state} = useLocation();
-    const [user, setUser] =  useState({
-        username: "",
-        email: "",
-        store: {}
-    });
+  // Sample data for the graphs and table
+  const recentActivitiesData = [
+    {name: 'Activity 1', value: 10},
+    {name: 'Activity 2', value: 20},
+    {name: 'Activity 3', value: 15},
+    // Add more data as needed
+  ];
 
-    useEffect(() => {
-        fetch(`https://mph-backend.herokuapp.com/users/me`, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json',
-                Authorization: `Bearer ${state.token}`,
-            },
-        })
-            .then(res => res.json())
-            .then(user => {
-                setUser({username: user.username, email: user.email, store: user.store})
-            });
-        document.body.style.background = '#f4f4f4';
-    }, []);
+  const tradeTrendsData = [
+    {name: 'Jan', value: 1000},
+    {name: 'Feb', value: 1500},
+    {name: 'Mar', value: 1200},
+    // Add more data as needed
+  ];
 
-    return (
-        <Fragment>
-            <Navbar
-                image="1"
-                username={user.username}
-                email={user.email}
-                avatar_url={Image}
-            />
+  const inventoryData = [
+    {name: 'Item 1', availableItems: 5, totalPrice: 100},
+    {name: 'Item 2', availableItems: 10, totalPrice: 200},
+    {name: 'Item 3', availableItems: 8, totalPrice: 150},
+    // Add more data as needed
+  ];
 
-            <section className="dashboard-container">
-                <Grid item>
-                    <UserItem username={user.username} email={user.email} avatar_url={Image} />
-                </Grid>
+  // Calculate the sum of total inventories
+  const totalInventorySum = inventoryData.reduce(
+    (sum, item) => sum + item.totalPrice,
+    0,
+  );
 
-                {state === 'Products' ? (
-                    <div className="grid1">
-                        <AddNew text="Product" path="/AddProduct" />
-                    </div>
-                ) : (
-                    <div className="grid1">
-                        {
-                            user.store?.title ? user.store.title : <AddNew text="Store" token={state.token} path="/AddStore" />
-                        }
-                    </div>
-                )}
-            </section>
-        </Fragment>
-    );
+  return (
+    <div>
+      <Grid container spacing={2}>
+        {/* Widgets */}
+        <Grid item xs={4}>
+          <Typography variant="h6">Total Inventory: X</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography variant="h6">Last Activity: Y</Typography>
+        </Grid>
+        <Grid item xs={4}>
+          <Typography variant="h6">No. of Transactions: Z</Typography>
+        </Grid>
+
+        {/* Graphs */}
+        <Grid item xs={6}>
+          <Typography variant="h6">Recent Activities</Typography>
+          <LineChart width={500} height={300} data={recentActivitiesData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="value" stroke="#8884d8" />
+          </LineChart>
+        </Grid>
+        <Grid item xs={6}>
+          <Typography variant="h6">Trade Trends</Typography>
+          <BarChart width={500} height={300} data={tradeTrendsData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="value" fill="#8884d8" />
+          </BarChart>
+        </Grid>
+
+        {/* Table */}
+        <Grid item xs={12}>
+          <Typography variant="h6">Total Available Inventories</Typography>
+          <table>
+            <thead>
+              <tr>
+                <th>Inventory Name</th>
+                <th>No. of Available Items</th>
+                <th>Total Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {inventoryData.map((item, index) => (
+                <tr key={index}>
+                  <td>{item.name}</td>
+                  <td>{item.availableItems}</td>
+                  <td>{item.totalPrice}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colSpan="2">Sum of Total Inventories:</td>
+                <td>{totalInventorySum}</td>
+              </tr>
+            </tfoot>
+          </table>
+        </Grid>
+      </Grid>
+    </div>
+  );
 };
 
 export default Dashboard;

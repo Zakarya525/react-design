@@ -4,24 +4,22 @@ import './App.css';
 import Error from './components/Error';
 import Login from './components/Forms/Login';
 import SignUp from './components/Forms/SignUp';
-import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
-import AddStore from './components/Forms/AddStore';
-import AddProduct from './components/Forms/AddProduct';
 import Loading from './components/Loading';
-import UserProfile from './components/UserProfile/UserProfile';
+import SideBar from './pages/SideBar';
+import ProfileSetting from './pages/ProfileSetting';
+import ChangePassword from './pages/ChangePassword';
 
 function App() {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/signup" element={<SignUp />} />
+        <Route path="/" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<UserProfile />} />
-        <Route path="/AddStore" element={<AddStore />} />
-        <Route path="/AddProduct" element={<AddProduct />} />
+        <Route path="/Dashboard" element={<Dashboard />} />
+        <Route path="/sidebar" element={<SideBar />} />
+        <Route path="/Change-Password" element={<ChangePassword />} />
+        <Route path="/Profile-Setting" element={<ProfileSetting />} />
         <Route path="*" element={<Error />} />
       </Routes>
     </Suspense>

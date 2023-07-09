@@ -1,10 +1,7 @@
-import axios from 'axios';
 import React, {Fragment, useState} from 'react';
 import {useForm} from 'react-hook-form';
-import FileBase64 from 'react-file-base64';
 import {useNavigate, Link} from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
 
 import {
   Button,
@@ -28,19 +25,6 @@ export const SignUp = () => {
 
   const submitHandler = (data) => {
     console.log(data);
-    fetch('https://mph-backend.herokuapp.com/register', {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: data.username,
-        email: data.email,
-        password: data.password,
-      }),
-    }).then((result) => console.log(result));
-    reset();
-
     navigate('/login');
   };
 
@@ -65,11 +49,12 @@ export const SignUp = () => {
                 fullWidth
                 aria-required={'true'}
                 type="name"
-                id="fullWidth"
-                label="Username"
+                id="outline-small-size"
+                label="First Name"
                 variant="outlined"
                 margin="normal"
-                {...register('username', {required: 'Please fill the field.'})}
+                size="small"
+                {...register('firstname', {required: 'Please fill the field.'})}
               />
               <Typography
                 variant="body2"
@@ -77,14 +62,35 @@ export const SignUp = () => {
                   color: 'red',
                   float: 'left',
                 }}>
-                {errors.username?.message}
+                {errors.firstname?.message}
               </Typography>
-
               <TextField
                 fullWidth
+                aria-required={'true'}
+                type="name"
+                size="small"
                 id="fullWidth"
-                type="email"
-                label="Email"
+                label="Last Name"
+                variant="outlined"
+                margin="normal"
+                {...register('lastName', {required: 'Please fill the field.'})}
+              />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'red',
+                  float: 'left',
+                }}>
+                {errors.lastName?.message}
+              </Typography>
+              <TextField
+                fullWidth
+                aria-required={'true'}
+                type="name"
+                size="small"
+                id="fullWidth"
+                label="Email Address"
+                variant="outlined"
                 margin="normal"
                 {...register('email', {required: 'Please fill the field.'})}
               />
@@ -96,10 +102,49 @@ export const SignUp = () => {
                 }}>
                 {errors.email?.message}
               </Typography>
+              <TextField
+                fullWidth
+                aria-required={'true'}
+                type="number"
+                size="small"
+                id="fullWidth"
+                label="Mobile Number"
+                variant="outlined"
+                margin="normal"
+                {...register('number', {required: 'Please fill the field.'})}
+              />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'red',
+                  float: 'left',
+                }}>
+                {errors.number?.message}
+              </Typography>
+              <TextField
+                fullWidth
+                aria-required={'true'}
+                type="name"
+                id="fullWidth"
+                label="CNIC"
+                size="small"
+                variant="outlined"
+                margin="normal"
+                {...register('cnic', {required: 'Please fill the field.'})}
+              />
+              <Typography
+                variant="body2"
+                sx={{
+                  color: 'red',
+                  float: 'left',
+                }}>
+                {errors.cnic?.message}
+              </Typography>
 
               <TextField
                 fullWidth
                 id="fullWidth"
+                size="small"
                 label="Password"
                 type="password"
                 autoComplete="current-password"
@@ -122,12 +167,22 @@ export const SignUp = () => {
                 {errors.password?.message}
               </Typography>
 
-              <Button type="submit" variant="contained" sx={{m: '3rem'}}>
-                <input type="submit" hidden />
-                Register
-              </Button>
+              <Box sx={{display: 'flex'}}>
+                <Button
+                  type="submit"
+                  size="small"
+                  variant="contained"
+                  sx={{m: '1rem'}}>
+                  <input type="submit" hidden />
+                  Register
+                </Button>
+                <Link to="/login">
+                  <Button size="small" margin="normal" sx={{m: '1rem'}}>
+                    Already have an Account
+                  </Button>
+                </Link>
+              </Box>
             </form>
-            <div className="img-info"></div>
           </Box>
         </div>
       </Grow>
