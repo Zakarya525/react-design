@@ -1,9 +1,10 @@
-import React, {Fragment, useEffect, useState} from 'react';
+import React, {Fragment, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {Link, useNavigate} from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {Box, Button, CssBaseline, TextField, Typography} from '@mui/material';
 import {Grow} from '@material-ui/core';
+import VerifyOTP from '../VerifyOTP';
 
 export const Login = () => {
   let navigate = useNavigate();
@@ -17,9 +18,30 @@ export const Login = () => {
       password: '',
     },
   });
-  const [accessToken, setAccessToken] = useState('');
+  const [open, setOpen] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
-  const handleClick = async () => {
+  const handleClick = async (data) => {
+    const storedData = JSON.parse(localStorage.getItem('formData'));
+    console.log(data);
+    console.log(storedData);
+
+    if (storedData) {
+      if (
+        data.username === storedData.email &&
+        data.password === storedData.password
+      ) {
+        setOpen(true);
+      } else {
+        alert('Invalid credentials');
+      }
+    } else {
+      alert('No user data found');
+    }
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
     navigate('/sidebar');
   };
 
@@ -98,7 +120,10 @@ export const Login = () => {
           </Box>
         </div>
       </Grow>
+
+      {open && <VerifyOTP handleCloseModal={handleCloseModal} />}
     </Fragment>
   );
 };
+
 export default Login;

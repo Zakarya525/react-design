@@ -9,6 +9,7 @@ import Loading from './components/Loading';
 import SideBar from './pages/SideBar';
 import ProfileSetting from './pages/ProfileSetting';
 import ChangePassword from './pages/ChangePassword';
+import VerifyOTP from './components/VerifyOTP';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path="/" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/sidebar" element={<SideBar />} />
         <Route path="/Change-Password" element={<ChangePassword />} />

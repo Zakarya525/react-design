@@ -2,6 +2,7 @@ import React, {Fragment, useState} from 'react';
 import {useForm} from 'react-hook-form';
 import {useNavigate, Link} from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import VerifyOTP from '../VerifyOTP';
 
 import {
   Button,
@@ -10,6 +11,7 @@ import {
   CssBaseline,
   Box,
   Typography,
+  Modal,
 } from '@mui/material';
 import '../../App.css';
 import {Grow} from '@material-ui/core';
@@ -22,19 +24,33 @@ export const SignUp = () => {
     formState: {errors},
   } = useForm();
   let navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
   const submitHandler = (data) => {
     console.log(data);
-    navigate('/login');
+    setIsFormSubmitted(true);
+    setOpen(true);
+    localStorage.setItem('formData', JSON.stringify(data));
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+    navigate('/sidebar');
   };
 
   return (
     <Fragment>
-      <Grow in={open}>
+      <Grow in={!isFormSubmitted}>
         <div id="body-content" className="container">
           <CssBaseline />
           <Box sx={{display: 'flex', p: 1}}>
             <form className="form" onSubmit={handleSubmit(submitHandler)}>
+              <Modal open={open} onClose={handleCloseModal}>
+                <div>
+                  <VerifyOTP handleCloseModal={handleCloseModal} />
+                </div>
+              </Modal>
               <Link to="/">
                 <ArrowBackIcon
                   sx={{
@@ -105,7 +121,7 @@ export const SignUp = () => {
               <TextField
                 fullWidth
                 aria-required={'true'}
-                type="number"
+                inputProps={{inputMode: 'numeric', pattern: '[0-9]*'}}
                 size="small"
                 id="fullWidth"
                 label="Mobile Number"
@@ -183,9 +199,17 @@ export const SignUp = () => {
                 </Link>
               </Box>
             </form>
+            <div className="img-info"></div>
           </Box>
         </div>
       </Grow>
+      {isFormSubmitted && (
+        <Modal open={open} onClose={handleCloseModal}>
+          <div>
+            <VerifyOTP handleCloseModal={handleCloseModal} />
+          </div>
+        </Modal>
+      )}
     </Fragment>
   );
 };

@@ -45,18 +45,18 @@ const Dashboard = () => {
     <div>
       <Grid container spacing={2}>
         {/* Widgets */}
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           <Typography variant="h6">Total Inventory: X</Typography>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           <Typography variant="h6">Last Activity: Y</Typography>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           <Typography variant="h6">No. of Transactions: Z</Typography>
         </Grid>
 
         {/* Graphs */}
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Typography variant="h6">Recent Activities</Typography>
           <LineChart width={500} height={300} data={recentActivitiesData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -67,7 +67,7 @@ const Dashboard = () => {
             <Line type="monotone" dataKey="value" stroke="#8884d8" />
           </LineChart>
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           <Typography variant="h6">Trade Trends</Typography>
           <BarChart width={500} height={300} data={tradeTrendsData}>
             <CartesianGrid strokeDasharray="3 3" />
